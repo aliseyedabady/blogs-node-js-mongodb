@@ -1,9 +1,12 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const { json } = require("express");
+const { userValidate } = require("../validations");
 
 module.exports.userCreate = async (req, res) => {
   try {
+    const data = userValidate(req);
+    if (data.error) return res.json({ msg: data.error.details[0].message });
     const { username, email, password } = req.body;
     const usernameCheck = await User.exists({ username });
     if (usernameCheck) {

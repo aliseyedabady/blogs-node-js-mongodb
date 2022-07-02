@@ -1,8 +1,11 @@
 const Blog = require("../models/blogModel");
 const userModel = require("../models/userModel");
+const { blogValidate } = require("../validations");
 
 module.exports.createBlog = async (req, res) => {
   try {
+    const data = blogValidate(req);
+    if (data.error) return res.json({ msg: data.error.details[0].message });
     const { _id, title, description } = req.body;
     const blog = Blog.create({ title, description, author: _id });
 
